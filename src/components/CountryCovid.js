@@ -17,6 +17,7 @@ class TestState extends Component {
             globalHistory: {}
         };
     }
+
     async componentDidMount() {
         moment.locale("vi");
 
@@ -109,11 +110,13 @@ class TestState extends Component {
             // }
         }
     }
+
     onSearch = e => {
         this.setState({
             searchTerm: e.target.value
         });
     };
+
     numberWithCommas = x => {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
@@ -216,6 +219,7 @@ class TestState extends Component {
             sortNations: sortArr
         });
     };
+
     handleSortRRecovered = e => {
         var sortArr = [];
         if (this.state.sortCases) {
@@ -228,6 +232,7 @@ class TestState extends Component {
             sortNations: sortArr
         });
     };
+
     handleTodayCases = e => {
         var sortArr = [];
         if (this.state.sortCases) {
@@ -240,6 +245,7 @@ class TestState extends Component {
             sortNations: sortArr
         });
     };
+
     handleSortDeaths = e => {
         var sortArr = [];
         if (this.state.sortCases) {

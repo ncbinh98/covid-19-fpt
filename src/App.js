@@ -11,11 +11,13 @@ class App extends Component {
             globalHistory: {}
         };
     }
+
     callbackFunction = dataChild => {
         this.setState({
             globalHistory: dataChild
         });
     };
+
     render() {
         return (
             <div>
