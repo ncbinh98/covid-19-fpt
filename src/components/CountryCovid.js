@@ -3,6 +3,7 @@ import axios from "axios";
 import moment from "moment";
 import { Line } from "react-chartjs-2";
 import "moment/locale/vi";
+import LineChartCovid from "./LineChartCovid";
 var _ = require("lodash");
 class TestState extends Component {
     constructor(props) {
@@ -40,14 +41,23 @@ class TestState extends Component {
             let yesterday0 = moment(today)
                 .subtract("1", "d")
                 .format("M/D/YY");
-
+            let yesterday1 = moment(yesterday0)
+                .subtract("1", "d")
+                .format("M/D/YY");
             let globalCasesHistory = 0;
             let globalDeathsHistory = 0;
             let globalRecoveredHistory = 0;
+
             res.data.forEach(nation => {
-                globalCasesHistory = globalCasesHistory + nation.timeline.cases[yesterday0];
-                globalDeathsHistory = globalDeathsHistory + nation.timeline.deaths[yesterday0];
-                globalRecoveredHistory = globalRecoveredHistory + nation.timeline.recovered[yesterday0];
+                if (!nation.timeline.cases[yesterday0]) {
+                    globalCasesHistory = globalCasesHistory + nation.timeline.cases[yesterday1];
+                    globalDeathsHistory = globalDeathsHistory + nation.timeline.deaths[yesterday1];
+                    globalRecoveredHistory = globalRecoveredHistory + nation.timeline.recovered[yesterday1];
+                } else {
+                    globalCasesHistory = globalCasesHistory + nation.timeline.cases[yesterday0];
+                    globalDeathsHistory = globalDeathsHistory + nation.timeline.deaths[yesterday0];
+                    globalRecoveredHistory = globalRecoveredHistory + nation.timeline.recovered[yesterday0];
+                }
             });
             this.setState({
                 globalHistory: {
@@ -56,7 +66,6 @@ class TestState extends Component {
                     recovered: globalRecoveredHistory
                 }
             });
-
             this.props.getGlobalHistory(this.state.globalHistory);
             this.setState({
                 nationsHistory: res.data
@@ -123,7 +132,6 @@ class TestState extends Component {
         if (result) {
             var datasetsLabel = Object.keys(result.timeline);
             var labels = Object.keys(result.timeline.cases);
-
             labels = labels.splice(labels.length - 15);
             var dataCases = Object.values(result.timeline.cases);
             dataCases = dataCases.splice(dataCases.length - 15);
@@ -298,9 +306,9 @@ class TestState extends Component {
                                               <strong style={{ color: "#cc00cc" }}>Tỷ lệ tử vong: </strong>{" "}
                                               {((nation.deaths / nation.cases) * 100).toFixed(3)}%
                                           </div>
-                                          <div className="col-xl-12 col-sm-12">
-                                              <Line options={{ responsive: true }} data={this.getNationHistory(nation.country)} />
-                                          </div>
+
+                                          {/* <Line options={{ responsive: true }} data={this.getNationHistory(nation.country)} /> */}
+                                          <LineChartCovid countryData={this.getNationHistory(nation.country)} />
                                       </div>
                                   </div>
                               </div>
